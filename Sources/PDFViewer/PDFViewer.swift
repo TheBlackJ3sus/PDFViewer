@@ -7,15 +7,30 @@ public enum PDFBuildType {
 }
 
 public struct viewerOptions {
-    let autoScales: Bool = false
-    let scaleFactor: CGFloat = 1
-    let minScaleFactor: CGFloat = 1
-    let maxScaleFactor: CGFloat = 4
-    let thumbnailSize = CGSize(width: 50, height: 50)
+    var autoScales: Bool = false
+    var scaleFactor: CGFloat = 1
+    var minScaleFactor: CGFloat = 1
+    var maxScaleFactor: CGFloat = 4
+    var thumbnailSize: CGSize = CGSize(width: 50, height: 50)
+    init(autoScales: Bool = false, scaleFactor: CGFloat = 1, minScaleFactor: CGFloat = 1, maxScaleFactor: CGFloat = 4, thumbnailSize: CGSize = CGSize(width: 50, height: 50)) {
+        self.autoScales = autoScales
+        self.scaleFactor = scaleFactor
+        self.minScaleFactor = minScaleFactor
+        self.maxScaleFactor = maxScaleFactor
+        self.thumbnailSize = thumbnailSize
+    }
 }
 
 @available(iOS 14, macOS 11.0, *)
 public class PDFController: UIViewController {
+    var pdfView = PDFView()
+    var thumbnailView = PDFThumbnailView()
+    var tapGesture: UITapGestureRecognizer {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(self.togglePDFThumbnailView(_:)))
+        tap.numberOfTapsRequired = 2
+        return tap
+    }
+    
     let document: PDFDocument
     let options: viewerOptions
     
@@ -45,7 +60,6 @@ public class PDFController: UIViewController {
 @available(iOS 14, macOS 11.0, *)
 extension PDFController {
     private func createPDFView() -> PDFView {
-        let pdfView = PDFView()
         pdfView.translatesAutoresizingMaskIntoConstraints = false
         pdfView.document = self.document
         pdfView.autoScales = self.options.autoScales
@@ -55,19 +69,25 @@ extension PDFController {
         return pdfView
     }
     private func createPDFThumbnailView(pdfView: PDFView) -> PDFThumbnailView {
-        let thumbnailView = PDFThumbnailView()
         thumbnailView.translatesAutoresizingMaskIntoConstraints = false
         thumbnailView.thumbnailSize = self.options.thumbnailSize
         thumbnailView.layoutMode = .horizontal
         thumbnailView.pdfView = pdfView
+        thumbnailView.isHidden = true
         return thumbnailView
     }
+    @objc func togglePDFThumbnailView(_ sender: UITapGestureRecognizer? = nil) {
+        thumbnailView.isHidden.toggle()
+    }
+    
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         let pdfView = createPDFView()
         let thumbnailView = createPDFThumbnailView(pdfView: pdfView)
         view.addSubview(pdfView)
         view.addSubview(thumbnailView)
+        pdfView.addGestureRecognizer(self.tapGesture)
         NSLayoutConstraint.activate([
             pdfView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
             pdfView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
