@@ -76,7 +76,7 @@ struct PDFViewer: UIViewControllerRepresentable {
     }
 }
 
-enum PDFBuildType {
+public enum PDFBuildType {
     case document(PDFDocument)
     case images([UIImage])
 }
