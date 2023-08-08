@@ -7,10 +7,11 @@ public enum PDFBuildType {
 }
 
 public struct viewerOptions {
-    let autoScales: Bool
-    let scaleFactor: CGFloat
-    let minScaleFactor: CGFloat
-    let maxScaleFactor: CGFloat
+    let autoScales: Bool = false
+    let scaleFactor: CGFloat = 1
+    let minScaleFactor: CGFloat = 1
+    let maxScaleFactor: CGFloat = 4
+    let thumbnailSize = CGSize(width: 50, height: 50)
 }
 
 @available(iOS 14, macOS 11.0, *)
@@ -56,6 +57,8 @@ extension PDFController {
     private func createPDFThumbnailView(pdfView: PDFView) -> PDFThumbnailView {
         let thumbnailView = PDFThumbnailView()
         thumbnailView.translatesAutoresizingMaskIntoConstraints = false
+        thumbnailView.thumbnailSize = self.options.thumbnailSize
+        thumbnailView.layoutMode = .horizontal
         thumbnailView.pdfView = pdfView
         return thumbnailView
     }
@@ -83,7 +86,7 @@ extension PDFController {
 @available(iOS 14, macOS 11.0, *)
 public struct PDFViewer: UIViewControllerRepresentable {
     let build: PDFBuildType
-    var options: viewerOptions = viewerOptions(autoScales: false, scaleFactor: 1, minScaleFactor: 1, maxScaleFactor: 4)
+    var options: viewerOptions = viewerOptions()
     
     ///Use default options
     public init(build: PDFBuildType) {
