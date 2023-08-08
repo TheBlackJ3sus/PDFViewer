@@ -62,6 +62,10 @@ extension PDFController {
 public struct PDFViewer: UIViewControllerRepresentable {
     public var build: PDFBuildType
     
+    public init(build: PDFBuildType) {
+        self.build = build
+    }
+    
     public func makeUIViewController(context: Context) -> PDFController {
         switch build {
         case .document(let document):
