@@ -3,14 +3,14 @@ import PDFKit
 
 @available(iOS 14, macOS 11.0, *)
 public class PDFController: UIViewController {
-    var document: PDFDocument
+    public var document: PDFDocument
     
-    init(document: PDFDocument) {
+    public init(document: PDFDocument) {
         self.document = document
         super.init(nibName: nil, bundle: nil)
     }
     //Create document from UIImages
-    convenience init(images: [UIImage]) {
+    public convenience init(images: [UIImage]) {
         let newDocument = PDFDocument()
         for image in images {
             if let newPage = PDFPage(image: image) {
@@ -60,9 +60,9 @@ extension PDFController {
 
 @available(iOS 14, macOS 11.0, *)
 struct PDFViewer: UIViewControllerRepresentable {
-    var build: PDFBuildType
+    public var build: PDFBuildType
     
-    func makeUIViewController(context: Context) -> PDFController {
+    public func makeUIViewController(context: Context) -> PDFController {
         switch build {
         case .document(let document):
             return PDFController(document: document)
@@ -71,7 +71,7 @@ struct PDFViewer: UIViewControllerRepresentable {
         }
     }
         
-    func updateUIViewController(_ uiViewController: PDFController, context: Context) {
+    public func updateUIViewController(_ uiViewController: PDFController, context: Context) {
         // Updates the state of the specified view controller with new information from SwiftUI.
     }
 }
