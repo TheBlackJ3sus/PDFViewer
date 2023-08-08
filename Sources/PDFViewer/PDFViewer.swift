@@ -59,7 +59,7 @@ extension PDFController {
 }
 
 @available(iOS 14, macOS 11.0, *)
-struct PDFViewer: UIViewControllerRepresentable {
+public struct PDFViewer: UIViewControllerRepresentable {
     public var build: PDFBuildType
     
     public func makeUIViewController(context: Context) -> PDFController {
